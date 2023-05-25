@@ -17,7 +17,7 @@ jobs:
     name: PHP ${{ matrix.php }} tests
     steps:
       # basically git clone
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # use PHP of specific version
       - uses: shivammathur/setup-php@v2
@@ -25,8 +25,20 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none # disable xdebug, pcov
 
-      - run: composer validate --strict
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
-      - run: composer install
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-
 
-      - run: vendor/bin/phpunit
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run test suite
+        run: composer run-script test
