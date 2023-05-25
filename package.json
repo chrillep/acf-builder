@@ -5,7 +5,7 @@
   "author": "Steve Pfisterer <steve@stoutlogic.com>",
   "license": "GPL-2.0+",
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-notify": "^2.2.0",
     "gulp-phpunit": "^0.14.0"
   }
